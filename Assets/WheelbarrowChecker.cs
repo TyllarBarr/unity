@@ -9,37 +9,31 @@ public class WheelbarrowChecker : MonoBehaviour
     private HashSet<string> itemsInBarrow = new HashSet<string>();
 
     void OnTriggerEnter(Collider other)
+{
+    if (requiredTags.Contains(other.tag))
     {
-        if (requiredTags.Contains(other.tag))
-        {
-            itemsInBarrow.Add(other.tag);
-            CheckItems();
-        }
+        itemsInBarrow.Add(other.tag);
+        CheckItems();
+    }
+}
+
+void CheckItems()
+{
+    foreach (string tag in requiredTags)
+    {
+        if (!itemsInBarrow.Contains(tag))
+            return;
     }
 
-    void OnTriggerExit(Collider other)
-    {
-        if (requiredTags.Contains(other.tag))
-        {
-            itemsInBarrow.Remove(other.tag);
-        }
-    }
-
-    void CheckItems()
-    {
-        if (itemsInBarrow.Count == requiredTags.Count)
-        {
-            AllItemsInBarrow();
-        }
-    }
-
-  
+    AllItemsInBarrow();
+}
 
 void AllItemsInBarrow()
 {
+    if (completed) return;
 
+    completed = true;
     Debug.Log("All items collected! Removing wall...");
-
     Destroy(wall);
 }
 }
